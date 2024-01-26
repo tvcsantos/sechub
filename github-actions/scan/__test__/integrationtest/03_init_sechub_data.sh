@@ -3,12 +3,15 @@
 
 cd $(dirname "$0")
 
+SECHUB_SERVER_PORT=$1
+PDS_PORT=$2
+
 echo "[START] setup integration test scenario for github action 'scan' "
 echo "        precondition: SecHub server mut be started locally"
 
 echo "----- Handle settings"
 if [[ "$SECHUB_SERVER" == "" ]]; then
-   export SECHUB_SERVER="https://localhost:8443"
+   export SECHUB_SERVER="https://localhost:$SECHUB_SERVER_PORT"
    echo "SECHUB_SERVER was not defined - use fallback"
 fi
 if [[ "$SECHUB_USERID" == "" ]]; then
@@ -20,7 +23,7 @@ if [[ "$SECHUB_APITOKEN" == "" ]]; then
    echo "SECHUB_APITOKEN was not defined - use fallback"
 fi
 echo "----- Prepare sechub api script usage"
-cd ../../..
+cd ../../../..
 # at root level now
 
 cd sechub-developertools/scripts
@@ -40,5 +43,6 @@ echo "----- Create test project:$project for user:$user"
 
 
 
-
-
+# wait a short time - to give SecHub chance to handle events etc.
+sleep 2s
+# now the setup shall be done and effective
